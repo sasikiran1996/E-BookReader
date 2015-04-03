@@ -1,0 +1,16 @@
+Features of PDF Reader
+
+1)  Should be able to open and display pdf files
+2)  Import the pdf's from system with a search option
+3)  We will try to also incorporate Spell-Check, Autocomplete in the search
+4)  Appropriate Data structures will be used for the same
+5)  Higlighting the text
+6)  A dictionary option to search for any word while reading
+7)  The autocomplete will work with some part of the string and give recommendations.
+8)  Zooming and Night mode options
+9)  Page Number display 
+8)  Go to specific pages
+9)  View Resizing
+10) Search for a word in the PDF.
+11) Bookmarks
+12) A good GUI will be incorporated,
