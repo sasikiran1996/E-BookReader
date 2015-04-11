@@ -1,5 +1,6 @@
 package PDFReader ;
 
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -9,20 +10,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 import org.jpedal.PdfDecoder;
+import org.jpedal.examples.viewer.utils.FileFilterer;
 import org.jpedal.fonts.FontMappings;
 
-public class PDFPanel extends JFrame {
+public class PDFPanel{
 	
+	private JFrame pdfDisplayFrame = new JFrame();
 	private PdfDecoder pdfDecoder ; 
-	private String fileName ;
+	private String currentFileName;
 	private int currentPage = 1 ;
 	public JMenu menu ;
 	public JMenuBar menuBar ;
@@ -30,11 +32,14 @@ public class PDFPanel extends JFrame {
 	public PDFPanel(String name){
 		pdfDecoder = new PdfDecoder(true) ;
 		FontMappings.setFontReplacements();
-		fileName = name  ;
+		currentFileName = name ;
 		try {
-			pdfDecoder.openPdfFile(fileName);
+			pdfDecoder.openPdfFile(currentFileName);
 			pdfDecoder.decodePage(currentPage);
-			pdfDecoder.setPageParameters(1, 1);  //1 for 100 % and one for initially displaying page 1
+			//1 for 100 % and one for initially displaying page 1
+			pdfDecoder.setPageParameters(1, 1);  
+			//making changes
+			pdfDecoder.invalidate();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -46,37 +51,50 @@ public class PDFPanel extends JFrame {
 	}
 	
 	public PDFPanel(){
-		setTitle("Empty File");
+		pdfDisplayFrame.setTitle("Empty File");
 		pdfDecoder = new PdfDecoder(true) ;
 		initializeViewer() ;
 	}
 	
 	protected void initializeViewer(){
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		Container containerPane = this.getContentPane();
+		
+		pdfDisplayFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container containerPane = pdfDisplayFrame.getContentPane();
 		containerPane.setLayout(new BorderLayout());
 		menuBar = makeMenuBar() ;
-		JButton openButton = makeOpenButton() ;
+		//JButton openButton = makeOpenButton() ;
 		//JPanel topMenuBar = new JPanel() ;
 		
 		containerPane.add(menuBar, BorderLayout.BEFORE_FIRST_LINE);
 	    
-		pack();
+		pdfDisplayFrame.pack();
 	    final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-	    setSize(screen.width/2,screen.height/2);
-		setVisible(true);
+	    pdfDisplayFrame.setSize(screen.width/2,screen.height/2);
+		pdfDisplayFrame.setVisible(true);
 	}
 	
 	private JMenuBar makeMenuBar(){
 		JMenuBar mBar = new JMenuBar() ;
 		JMenu fileMenu = new JMenu("File") ;
 		JMenuItem fileItemOpen = fileMenu.add("Open");
+		
 		fileItemOpen.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+			//Open here 
+				selectFile();
+			}
+		});
+		
+		JMenuItem fileItemQuickOpen = fileMenu.add("QuickOpen");
+		
+		fileItemQuickOpen.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
 			}
 		});
+		
 		
 		JMenuItem fileItemImport = fileMenu.add("Import");
 		fileItemImport.addActionListener(new ActionListener() {
@@ -90,7 +108,9 @@ public class PDFPanel extends JFrame {
 		fileItemExit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-			//Open here 
+			//Open here
+				pdfDecoder.dispose();
+				pdfDisplayFrame.dispose();
 			}
 		});
 		
@@ -221,13 +241,66 @@ public class PDFPanel extends JFrame {
 	    
 	    return openButton;
 	}
+	
 	public void selectFile(){
 		
+		JFileChooser fileChooser = new JFileChooser(".");
+		//setting the selectable option to files only 
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
+		String[] PDF = {"pdf"};
+		//only pdfs must be chosen
+		fileChooser.addChoosableFileFilter(new FileFilterer(PDF, "(*.pdf)"));
+		
+		int resultOfFileSelect = JFileChooser.ERROR_OPTION;
+	    
+		//until a valid file is chosen
+		while(resultOfFileSelect==JFileChooser.ERROR_OPTION){
+		      
+		      resultOfFileSelect = fileChooser.showOpenDialog(pdfDisplayFrame);
+		      
+		      if(resultOfFileSelect==JFileChooser.ERROR_OPTION) {
+		                System.err.println("JFileChooser error");
+		            }
+		      
+		      if(resultOfFileSelect==JFileChooser.APPROVE_OPTION){
+		        currentFileName = fileChooser.getSelectedFile().getAbsolutePath();
+		        
+		        currentPage = 1;
+		      }
+		}
+		
+		
+		try {
+			pdfDecoder.closePdfFile();
+			pdfDecoder.openPdfFile(currentFileName);
+			
+			pdfDecoder.decodePage(currentPage);
+			pdfDecoder.setPageParameters(1,1); 
+			pdfDecoder.invalidate();
+	          
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		pdfDisplayFrame.setTitle(currentFileName);
+        
+		pdfDisplayFrame.pack();
+		pdfDisplayFrame.repaint();
 	}
 	
 	public static void  main(String[] args){
-		System.out.println("Hello ...");
-		new PDFPanel("shiva.pdf");
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				DisplayTheme.setSystemTheme();
+				new PDFPanel("report_lab3.pdf");
+				
+			}
+		});
 		
 	}
 }
