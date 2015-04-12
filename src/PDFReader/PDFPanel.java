@@ -8,13 +8,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.examples.viewer.utils.FileFilterer;
@@ -28,6 +27,8 @@ public class PDFPanel{
 	private int currentPage = 1 ;
 	public JMenu menu ;
 	public JMenuBar menuBar ;
+	private int currentScalingIndex = 2; 
+	
 	
 	public PDFPanel(String name){
 		pdfDecoder = new PdfDecoder(true) ;
@@ -36,10 +37,13 @@ public class PDFPanel{
 		try {
 			pdfDecoder.openPdfFile(currentFileName);
 			pdfDecoder.decodePage(currentPage);
+			
+			pdfDecoder.waitForDecodingToFinish();
 			//1 for 100 % and one for initially displaying page 1
 			pdfDecoder.setPageParameters(1, 1);  
 			//making changes
 			pdfDecoder.invalidate();
+			//pdfDisplayFrame.repaint();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -67,6 +71,12 @@ public class PDFPanel{
 		
 		containerPane.add(menuBar, BorderLayout.BEFORE_FIRST_LINE);
 	    
+		//setup scrollpane with pdf display inside
+		JScrollPane display = initPdfDisplay();
+	    containerPane.add(display,BorderLayout.CENTER);
+	    
+	   //opens at center
+		pdfDisplayFrame.setLocationRelativeTo(null);
 		pdfDisplayFrame.pack();
 	    final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 	    pdfDisplayFrame.setSize(screen.width/2,screen.height/2);
@@ -138,6 +148,7 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+				currentScalingIndex = EditMenuItems.zoomIn(pdfDecoder,currentPage,currentScalingIndex);
 			}
 		});
 		
@@ -145,7 +156,8 @@ public class PDFPanel{
 		editItemZoomOut.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-			//Open here 
+			//Open here
+				currentScalingIndex = EditMenuItems.zoomOut(pdfDecoder,currentPage,currentScalingIndex);
 			}
 		});
 		
@@ -159,7 +171,68 @@ public class PDFPanel{
 		
 		mBar.add(editMenu);
 		
-		JMenu goMenu = new JMenu("Go") ;
+		/*
+		JMenu viewMenu = new JMenu("View");
+		JCheckBoxMenuItem viewItemContinuous = new JCheckBoxMenuItem("Continuous");
+		viewMenu.add(viewItemContinuous);
+		viewItemContinuous.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//changing continuous flag
+				if(continuous){
+					continuous = false;
+				}
+				else{
+					continuous = true;
+				}
+				
+				int parameter = 0;
+				if(continuous){
+					parameter += 2;
+				}
+				if(facing){
+					parameter += 1;
+				}
+				
+				setViewMode(parameter);
+			}
+		});
+		
+		
+		JCheckBoxMenuItem viewItemFacing = new JCheckBoxMenuItem("Facing");
+		viewMenu.add(viewItemFacing);
+		viewItemFacing.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//changing continuous flag
+				if(facing){
+					facing = false;
+				}
+				else{
+					facing = true;
+				}
+				
+				int parameter = 0;
+				if(continuous){
+					parameter += 2;
+				}
+				if(facing){
+					parameter += 1;
+				}
+				
+				setViewMode(parameter);
+			}
+		});
+		
+		
+		mBar.add(viewMenu);
+		*/
+		
+		JMenu goMenu = new JMenu("Goto") ;
 		
 		JMenuItem goItemNextPage = goMenu.add("Next Page");
 		goItemNextPage.addActionListener(new ActionListener() {
@@ -225,22 +298,6 @@ public class PDFPanel{
 		
 	}
 	
-
-	protected JButton makeOpenButton(){
-		JButton openButton = new JButton();
-		openButton.setIcon(new ImageIcon(getClass().getResource("/org/jpedal/examples/viewer/res/open.gif"))); //$NON-NLS-1$
-	    openButton.setText("Open");
-	    openButton.setToolTipText("Open a file"); 
-	    openButton.setBorderPainted(false);
-	    openButton.addActionListener(new ActionListener() {
-	    	
-	    	public void actionPerformed( ActionEvent e) {
-	            selectFile();
-	      }
-	    });
-	    
-	    return openButton;
-	}
 	
 	public void selectFile(){
 		
@@ -250,6 +307,7 @@ public class PDFPanel{
 		
 		String[] PDF = {"pdf"};
 		//only pdfs must be chosen
+		//arg0 is extension and arg1 is regex
 		fileChooser.addChoosableFileFilter(new FileFilterer(PDF, "(*.pdf)"));
 		
 		int resultOfFileSelect = JFileChooser.ERROR_OPTION;
@@ -276,8 +334,11 @@ public class PDFPanel{
 			pdfDecoder.openPdfFile(currentFileName);
 			
 			pdfDecoder.decodePage(currentPage);
+
+			pdfDecoder.waitForDecodingToFinish();
 			pdfDecoder.setPageParameters(1,1); 
 			pdfDecoder.invalidate();
+			//pdfDisplayFrame.repaint();
 	          
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -285,22 +346,46 @@ public class PDFPanel{
 		}
 		pdfDisplayFrame.setTitle(currentFileName);
         
-		pdfDisplayFrame.pack();
 		pdfDisplayFrame.repaint();
 	}
 	
-	public static void  main(String[] args){
+
+	//uses JScroll pane to set pdf display and its scroll bar 
+	private JScrollPane initPdfDisplay() {
+	    
+		//TODO: change scroll speed
+	    JScrollPane currentScroll = new JScrollPane();
+	    currentScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	    currentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    
+	    currentScroll.setViewportView(pdfDecoder);
+	        
+	    return currentScroll;
+	  }
+	
+	/*
+	private void setViewMode(int parameter){
 		
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				DisplayTheme.setSystemTheme();
-				new PDFPanel("report_lab3.pdf");
-				
-			}
-		});
-		
+		if(parameter == 0){
+			pdfDecoder.setDisplayView(Display.SINGLE_PAGE, Display.DISPLAY_CENTERED);
+			pdfDecoder.invalidate();
+			return;
+		}
+		if(parameter == 1){
+			pdfDecoder.setDisplayView(Display.FACING, Display.DISPLAY_CENTERED);
+			pdfDecoder.invalidate();
+			return;
+		}
+		if(parameter == 2){
+			pdfDecoder.setDisplayView(Display.CONTINUOUS, Display.DISPLAY_CENTERED);
+			pdfDecoder.invalidate();
+			return;
+		}
+		if(parameter == 3){
+			pdfDecoder.setDisplayView(Display.CONTINUOUS_FACING, Display.DISPLAY_CENTERED);
+			pdfDecoder.invalidate();
+			return;
+		}
 	}
+	 */
 }
