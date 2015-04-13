@@ -31,6 +31,7 @@ public class PDFPanel{
 	
 	
 	public PDFPanel(String name){
+		
 		pdfDecoder = new PdfDecoder(true) ;
 		FontMappings.setFontReplacements();
 		currentFileName = name ;
@@ -239,6 +240,11 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+			if(currentPage < pdfDecoder.getPageCount()){
+				currentPage ++ ;
+				remakePage();
+			}
+				
 			}
 		});
 		
@@ -247,7 +253,11 @@ public class PDFPanel{
 		goItemPrevPage.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-			//Open here 
+			//Open here
+				if(currentPage >1){
+					currentPage -- ;
+					remakePage();
+				}
 			}
 		});
 		
@@ -256,6 +266,8 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+				currentPage = 1 ;
+				remakePage();
 			}
 		});
 		
@@ -264,6 +276,8 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+				currentPage = pdfDecoder.getPageCount();
+				remakePage();
 			}
 		});
 		mBar.add(goMenu) ;
@@ -349,6 +363,27 @@ public class PDFPanel{
 		pdfDisplayFrame.repaint();
 	}
 	
+	public void remakePage(){
+		try {
+		//	pdfDecoder.closePdfFile();
+			//pdfDecoder.openPdfFile(currentFileName);
+			
+			pdfDecoder.decodePage(currentPage);
+
+			pdfDecoder.waitForDecodingToFinish();
+			pdfDecoder.setPageParameters(-1,currentPage); 
+			pdfDecoder.invalidate();
+			//pdfDisplayFrame.repaint();
+	          
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		pdfDisplayFrame.setTitle(currentFileName);
+		//EditMenuItems.zoomIn(pdfDecoder, currentPage, currentScalingIndex);
+        
+		pdfDisplayFrame.repaint();
+	}
 
 	//uses JScroll pane to set pdf display and its scroll bar 
 	private JScrollPane initPdfDisplay() {
