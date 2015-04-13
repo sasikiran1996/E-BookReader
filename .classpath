@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/shiva/Downloads/jpedal_lgpl.jar"/>
+	<classpathentry kind="lib" path="/home/shiva/Downloads/pdfbox-app-1.8.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
