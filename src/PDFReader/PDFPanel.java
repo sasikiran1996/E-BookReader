@@ -2,6 +2,7 @@ package PDFReader ;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -14,6 +15,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.examples.viewer.utils.FileFilterer;
@@ -28,8 +31,8 @@ public class PDFPanel{
 	public JMenu menu ;
 	public JMenuBar menuBar ;
 	private int currentScalingIndex = 2; 
-	
-	
+	private JTextField searchArea = new JTextField("Search");
+	Container containerPane ;
 	public PDFPanel(String name){
 		
 		pdfDecoder = new PdfDecoder(true) ;
@@ -63,8 +66,9 @@ public class PDFPanel{
 	
 	protected void initializeViewer(){
 		
+		
 		pdfDisplayFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Container containerPane = pdfDisplayFrame.getContentPane();
+		containerPane = pdfDisplayFrame.getContentPane();
 		containerPane.setLayout(new BorderLayout());
 		menuBar = makeMenuBar() ;
 		//JButton openButton = makeOpenButton() ;
@@ -75,6 +79,9 @@ public class PDFPanel{
 		//setup scrollpane with pdf display inside
 		JScrollPane display = initPdfDisplay();
 	    containerPane.add(display,BorderLayout.CENTER);
+	    //Add features to search bar
+	    searchArea.setBackground(Color.gray);
+	    containerPane.add(searchArea,BorderLayout.SOUTH );
 	    
 	   //opens at center
 		pdfDisplayFrame.setLocationRelativeTo(null);
@@ -166,7 +173,7 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 				//Get word from a text box and send it ...
-				EditMenuItems.searchWord(pdfDecoder, currentPage, "era");
+				EditMenuItems.searchWord(pdfDecoder, currentPage, "era" , searchArea , containerPane);
 			}
 		});
 		JMenuItem editItemFullScreen = editMenu.add("Full Screen");

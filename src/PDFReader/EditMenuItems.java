@@ -1,6 +1,10 @@
 package PDFReader;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Rectangle;
+
+import javax.swing.JTextField;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.exception.PdfException;
@@ -36,14 +40,14 @@ public class EditMenuItems {
 	
 	
 	
-	public static void searchWord(PdfDecoder pdfDecoder,int currentPage , String wordArg) {
+	public static void searchWord(PdfDecoder pdfDecoder,int currentPage , String wordArg , JTextField searchArea , Container containerPane) {
 		int pageNow = currentPage ;
 		for (pageNow = currentPage ; pageNow <= pdfDecoder.getPageCount() ; ++ pageNow){	
 			System.out.println("----------------------");
             System.out.println("Page "+pageNow);
-           
+           // containerPane.add(searchArea,BorderLayout.SOUTH );
             try {
-				//pdfDecoder.decodePage(pageNow);
+				pdfDecoder.decodePage(pageNow);
 				PdfGroupingAlgorithms currentGrouping = pdfDecoder.getGroupingObject();
 				if (currentGrouping != null){
 					int X1 , X2 , Y1 , Y2 ;
@@ -57,7 +61,7 @@ public class EditMenuItems {
                       float[] coOrds ;
                       try{
                     	  //search Word must come from a text Box or somthing .... !!!
-                    	  coOrds = currentGrouping.findText(new Rectangle(0 , 0 , X2 , Y1), 1 , new String[] {"good"} , SearchType.MUTLI_LINE_RESULTS ) ;
+                    	  coOrds = currentGrouping.findText(new Rectangle(0 , 0 , X2 , Y1), 1 , new String[] {searchArea.getText()} , SearchType.MUTLI_LINE_RESULTS ) ;
                     	  System.out.println(X1 + " " + Y1 + " " + X2 + " " + Y2 + "size : "+coOrds.length );
                     	  int i = 0 ;
                     	  for(i=0 ; i<coOrds.length  ; i=i+5 ){
@@ -69,6 +73,7 @@ public class EditMenuItems {
                       catch(PdfException e){
                     	  e.printStackTrace();
                       }
+                      //containerPane.remove(searchArea);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
