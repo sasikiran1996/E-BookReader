@@ -1,6 +1,12 @@
 package PDFReader;
 
+import java.awt.Rectangle;
+
 import org.jpedal.PdfDecoder;
+import org.jpedal.exception.PdfException;
+import org.jpedal.grouping.PdfGroupingAlgorithms;
+import org.jpedal.grouping.SearchType;
+import org.jpedal.objects.PdfPageData;
 
 public class EditMenuItems {
 	
@@ -27,4 +33,51 @@ public class EditMenuItems {
 		pdfDecoder.updateUI();
 		return(currentScalingIndex);
 	}
+	
+	
+	
+	public static void searchWord(PdfDecoder pdfDecoder,int currentPage , String wordArg) {
+		int pageNow = currentPage ;
+		for (pageNow = currentPage ; pageNow <= pdfDecoder.getPageCount() ; ++ pageNow){	
+			System.out.println("----------------------");
+            System.out.println("Page "+pageNow);
+           
+            try {
+				//pdfDecoder.decodePage(pageNow);
+				PdfGroupingAlgorithms currentGrouping = pdfDecoder.getGroupingObject();
+				if (currentGrouping != null){
+					int X1 , X2 , Y1 , Y2 ;
+					PdfPageData currentPageData = pdfDecoder.getPdfPageData();
+					  X1 = currentPageData.getMediaBoxX(currentPage);
+                      X2 = currentPageData.getMediaBoxWidth(currentPage) + X1;
+
+                      Y2 = currentPageData.getMediaBoxY(currentPage);
+                      Y1 = currentPageData.getMediaBoxHeight(currentPage) + Y2;
+                      
+                      float[] coOrds ;
+                      try{
+                    	  //search Word must come from a text Box or somthing .... !!!
+                    	  coOrds = currentGrouping.findText(new Rectangle(0 , 0 , X2 , Y1), 1 , new String[] {"good"} , SearchType.MUTLI_LINE_RESULTS ) ;
+                    	  System.out.println(X1 + " " + Y1 + " " + X2 + " " + Y2 + "size : "+coOrds.length );
+                    	  int i = 0 ;
+                    	  for(i=0 ; i<coOrds.length  ; i=i+5 ){
+                    		  System.out.println("Found in this page at ("+coOrds[i] + " , " + coOrds[i+1] + ")  (" + coOrds[i+2] + " , " + coOrds[i+3] + ") ");
+                    		  
+                    	  }
+                    			  				   
+                      }
+                      catch(PdfException e){
+                    	  e.printStackTrace();
+                      }
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+             
+		}
+		
+	}
+
 }

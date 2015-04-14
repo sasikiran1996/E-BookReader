@@ -161,7 +161,14 @@ public class PDFPanel{
 				currentScalingIndex = EditMenuItems.zoomOut(pdfDecoder,currentPage,currentScalingIndex);
 			}
 		});
-		
+		JMenuItem editItemSearch = editMenu.add("Search");
+		editItemSearch.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				//Get word from a text box and send it ...
+				EditMenuItems.searchWord(pdfDecoder, currentPage, "era");
+			}
+		});
 		JMenuItem editItemFullScreen = editMenu.add("Full Screen");
 		editItemFullScreen.addActionListener(new ActionListener() {
 			
@@ -169,6 +176,8 @@ public class PDFPanel{
 			//Open here 
 			}
 		});
+		
+	
 		
 		mBar.add(editMenu);
 		
@@ -345,6 +354,8 @@ public class PDFPanel{
 		
 		try {
 			pdfDecoder.closePdfFile();
+			pdfDecoder.setExtractionMode(PdfDecoder.TEXT); //extract just text
+            PdfDecoder.init(true);
 			pdfDecoder.openPdfFile(currentFileName);
 			
 			pdfDecoder.decodePage(currentPage);
