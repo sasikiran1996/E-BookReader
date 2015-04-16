@@ -4,18 +4,29 @@ package PDFReader ;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import org.jpedal.PdfDecoder;
@@ -75,13 +86,20 @@ public class PDFPanel{
 		//JPanel topMenuBar = new JPanel() ;
 		
 		containerPane.add(menuBar, BorderLayout.BEFORE_FIRST_LINE);
+		
+		menuBar.add(Box.createHorizontalGlue());
+		configureSearchBar();
+		
+		
+		
+		//creating horizontal glue
+		menuBar.add(searchArea);
 	    
 		//setup scrollpane with pdf display inside
 		JScrollPane display = initPdfDisplay();
 	    containerPane.add(display,BorderLayout.CENTER);
 	    //Add features to search bar
 	    searchArea.setBackground(Color.gray);
-	    containerPane.add(searchArea,BorderLayout.SOUTH );
 	    
 	   //opens at center
 		pdfDisplayFrame.setLocationRelativeTo(null);
@@ -173,7 +191,7 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 				//Get word from a text box and send it ...
-				EditMenuItems.searchWord(pdfDecoder, currentPage, "era" , searchArea , containerPane);
+				EditMenuItems.searchWord(pdfDecoder, currentPage, searchArea.getText() , containerPane);
 			}
 		});
 		JMenuItem editItemFullScreen = editMenu.add("Full Screen");
@@ -415,6 +433,69 @@ public class PDFPanel{
 	        
 	    return currentScroll;
 	  }
+	
+	private void configureSearchBar(){
+
+		searchArea.setLayout(new BorderLayout());
+		
+		searchArea.setPreferredSize(new Dimension(100,20));
+		searchArea.setMinimumSize(new Dimension(100,20));
+		searchArea.setMaximumSize(new Dimension(100,20));
+		searchArea.setBackground(menuBar.getBackground());
+		searchArea.add(new JSeparator(JSeparator.VERTICAL),BorderLayout.AFTER_LINE_ENDS);
+		Image SearchImage = null;
+		
+		try {
+			SearchImage = ImageIO.read(new FileInputStream("search-icon.png"));
+			SearchImage = SearchImage.getScaledInstance(15, 15, Image.SCALE_FAST);
+			ImageIcon icon = new ImageIcon(SearchImage);
+			JLabel searchLabel = new JLabel(icon);
+			
+			searchLabel.setCursor(Cursor.getDefaultCursor());
+			searchArea.add(searchLabel,BorderLayout.LINE_END);
+			searchLabel.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					//Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					//Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					//Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					//Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					//Auto-generated method stub
+					EditMenuItems.searchWord(pdfDecoder, currentPage, searchArea.getText(), containerPane);
+					searchArea.setText("");
+				}
+			});
+			
+		} catch (FileNotFoundException e) {
+			//Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	/*
 	private void setViewMode(int parameter){
