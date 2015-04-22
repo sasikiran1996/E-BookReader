@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.examples.viewer.utils.FileFilterer;
@@ -113,7 +115,7 @@ public class PDFPanel{
 		JMenuBar mBar = new JMenuBar() ;
 		JMenu fileMenu = new JMenu("File") ;
 		JMenuItem fileItemOpen = fileMenu.add("Open");
-		
+		fileItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
 		fileItemOpen.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -123,7 +125,7 @@ public class PDFPanel{
 		});
 		
 		JMenuItem fileItemQuickOpen = fileMenu.add("QuickOpen");
-		
+		fileItemQuickOpen.setAccelerator(KeyStroke.getKeyStroke("control alt O"));
 		fileItemQuickOpen.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -133,6 +135,7 @@ public class PDFPanel{
 		
 		
 		JMenuItem fileItemImport = fileMenu.add("Import");
+		fileItemImport.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,ActionEvent.CTRL_MASK));
 		fileItemImport.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -141,6 +144,7 @@ public class PDFPanel{
 		});
 		
 		JMenuItem fileItemExit = fileMenu.add("Exit");
+		fileItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,ActionEvent.ALT_MASK));
 		fileItemExit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -154,6 +158,7 @@ public class PDFPanel{
 		
 		JMenu editMenu = new JMenu("Edit") ;
 		JMenuItem editItemHighlight = editMenu.add("Highlight");
+		editItemHighlight.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H,ActionEvent.CTRL_MASK));
 		editItemHighlight.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -162,6 +167,7 @@ public class PDFPanel{
 		});
 		
 		JMenuItem editItemInvertcolors = editMenu.add("Invert Colors");
+		editItemInvertcolors.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
 		editItemInvertcolors.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -170,6 +176,7 @@ public class PDFPanel{
 		});
 		
 		JMenuItem editItemZoomIn = editMenu.add("Zoom In");
+		editItemZoomIn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,ActionEvent.CTRL_MASK));
 		editItemZoomIn.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -179,6 +186,7 @@ public class PDFPanel{
 		});
 		
 		JMenuItem editItemZoomOut = editMenu.add("Zoom Out");
+		editItemZoomOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,ActionEvent.CTRL_MASK));
 		editItemZoomOut.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -186,7 +194,9 @@ public class PDFPanel{
 				currentScalingIndex = EditMenuItems.zoomOut(pdfDecoder,currentPage,currentScalingIndex);
 			}
 		});
+		
 		JMenuItem editItemSearch = editMenu.add("Search");
+		editItemSearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
 		editItemSearch.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -194,7 +204,9 @@ public class PDFPanel{
 				EditMenuItems.searchWord(pdfDecoder, currentPage, searchArea.getText() , containerPane);
 			}
 		});
+		
 		JMenuItem editItemFullScreen = editMenu.add("Full Screen");
+		editItemFullScreen.setAccelerator(KeyStroke.getKeyStroke("F5"));
 		editItemFullScreen.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -270,6 +282,7 @@ public class PDFPanel{
 		JMenu goMenu = new JMenu("Goto") ;
 		
 		JMenuItem goItemNextPage = goMenu.add("Next Page");
+		
 		goItemNextPage.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
