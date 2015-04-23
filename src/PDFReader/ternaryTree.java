@@ -7,7 +7,14 @@ public class ternaryTree {
 	public ternaryTreeNode root = null;
 	
 	//Everytime new matchings arrayList will be assigned to it
+	// $ is the terminating character
+	protected ArrayList<Integer> indices = new ArrayList<Integer>();
+	
 	public ArrayList<String> matchings = new ArrayList<String>();
+	
+	private ArrayList<ternaryTreeNode> ReqNodes = new ArrayList<ternaryTreeNode>();
+	
+	private ArrayList<String> Generated = new ArrayList<String>();
 	
 	public void AddString(String str,int index){
 		if(str == null){
@@ -20,7 +27,7 @@ public class ternaryTree {
 				return;
 			}
 			else{
-				root = recurrsiveAdd(str,0,root,index);
+				root = recurrsiveAdd(str + "$",0,root,index);
 			}
 		}
 		
@@ -70,6 +77,8 @@ public class ternaryTree {
 	public void prefixedSearch(String query){
 		
 		matchings = new ArrayList<String>();
+		ReqNodes = new ArrayList<ternaryTreeNode>();
+		indices = new ArrayList<Integer>();
 		if(query == null){
 			System.err.println("Null string used for searching");
 			return;
@@ -81,61 +90,122 @@ public class ternaryTree {
 			}
 		}
 		
+		
 		//Note that query should be non null or empty
-		ternaryTreeNode reqNode = findNode(root,query,0);
-		if(reqNode == null){
-			return;
-		}
-		else{
-			if(reqNode.endNode){
+		//findNode(root,query,0);
+		searchWithinHammingDistance(root, query, 0, 1, "");
+		for(int i =0;i< ReqNodes.size();i++){
+			ternaryTreeNode req = ReqNodes.get(i);
+			if(req.endNode){
 				matchings.add(query);
+				indices.add(req.index);
 			}
-			if(reqNode.down != null){
-				recurrsiveAddToMatchings(reqNode.down,query);	
+			if(req.down != null){
+				//generated == query if only find node is used
+				recurrsiveAddToMatchings(req.down,query,Generated.get(i));	
 			}
 		}
 	}
 	
-	private ternaryTreeNode findNode(ternaryTreeNode root,String query,int position){
+	private void findNode(ternaryTreeNode root,String query,int position){
 		
 		//No null or empty string reaches here
 		if(root == null){
-			return(null);
+			return;
 		}
 		else{
 			if(query.charAt(position) < root.character){
-				return(findNode(root.left,query,position));
+				findNode(root.left,query,position);
 			}
 			else{
 				if(query.charAt(position) > root.character){
-					return(findNode(root.right,query,position));
+					findNode(root.right,query,position);
 				}
 				else{
 					if(position == query.length()-1){
-						return(root);
+						ReqNodes.add(root);
+						Generated.add(query);
 					}
 					else{
-						return(findNode(root.down,query,position + 1));
+						findNode(root.down,query,position + 1);
 					}
 				}
 			}
 		}
 	}
 	
-	private void recurrsiveAddToMatchings(ternaryTreeNode root,String query){
+	private void recurrsiveAddToMatchings(ternaryTreeNode root,String query,String generated){
 		
 		if(root.left != null){
-			recurrsiveAddToMatchings(root.left, query);
+			recurrsiveAddToMatchings(root.left, query,generated);
 		}
 		if(root.right != null){
-			recurrsiveAddToMatchings(root.right, query);
+			recurrsiveAddToMatchings(root.right, query,generated);
 		}
-		query += Character.toString(root.character);
+		generated += Character.toString(root.character);
 		if(root.endNode){
-			matchings.add(query);
+			matchings.add(generated);
+			indices.add(root.index);
 		}
 		if(root.down != null){
-			recurrsiveAddToMatchings(root.down, query);
+			recurrsiveAddToMatchings(root.down, query,generated);
+		}
+	}
+	
+	
+	private void searchWithinHammingDistance(ternaryTreeNode root,String query,int index,int distance,String generated){
+		
+		if(root == null | distance<0){
+			return;
+		}
+		//go left
+		if(distance>0 | query.charAt(index) < root.character){
+			searchWithinHammingDistance(root.left,query,index,distance,generated);
+		}
+		//go right
+		if(distance > 0 | query.charAt(index) > root.character){
+			searchWithinHammingDistance(root.right,query,index,distance,generated);
+		}
+		
+		if(root.character == '$'){
+			if(query.length() - index <= distance){
+				//No need of farther exploration
+				matchings.add(generated + "$");
+				indices.add(root.index);
+			}
+		}
+		else{
+			//TODO: Distance = 0 case
+			if(index == query.length() - 1){
+				if(root.character == query.charAt(index)){
+					generated += Character.toString(root.character);
+					ReqNodes.add(root);
+					Generated.add(generated);
+				}
+				else{
+					if(distance > 0){
+						generated += Character.toString(root.character);
+						ReqNodes.add(root);
+						Generated.add(generated);
+					}
+					else{
+						//do nothing
+					}
+				}
+			}
+			else{
+				if(root.character == query.charAt(index)){
+					searchWithinHammingDistance(root.down,query,index+1,distance,generated + Character.toString(root.character));
+				}
+				else{
+					if(distance > 0){
+						searchWithinHammingDistance(root.down,query,index+1,distance - 1,generated + Character.toString(root.character));					
+					}
+					else{
+						//do nothing
+					}
+				}
+			}
 		}
 	}
 }
