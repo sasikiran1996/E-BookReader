@@ -1,12 +1,10 @@
 package PDFReader;
 
-import java.util.ArrayList;
-
 public class Main {
 	
 	public static void  main(String[] args){
 		System.out.println("Hello");
-		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -15,7 +13,7 @@ public class Main {
 				new PDFPanel();
 				
 			}
-		});*/
+		});
 		
 	/*	String S1 = "book" ;
 		String S2 = "boob" ;
@@ -33,20 +31,10 @@ public class Main {
 			System.out.println(TT.matchings.get(i));
 		}*/
 		
-		BKTree root = new BKTree("tackle");
-		root.addBKNode("taken");
-		root.addBKNode(("sickle"));
-		root.addBKNode(("shiva"));
-		root.addBKNode("trickle");
-		root.addBKNode("wrinkle");
-		
-		ArrayList<String> list = root.getMatches("tinkle", 2);
-		int i = 0 ;
-		for (i=0 ; i<list.size() ; ++i){
-			System.out.println(list.get(i));
-		}
-		
-		//System.out.println(root.childList.get(0).childList.get(0).keyValue) ;
+		BKNode root = new BKNode("book");
+		root.addBKNode(new BKNode("boor"));
+		root.addBKNode(new BKNode("brook"));
+		System.out.println(root.childList.get(0).childList.get(0).keyValue) ;
 	}
 }
 

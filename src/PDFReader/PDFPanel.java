@@ -31,6 +31,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import org.jpedal.Display;
 import org.jpedal.PdfDecoder;
 import org.jpedal.examples.viewer.utils.FileFilterer;
 import org.jpedal.fonts.FontMappings;
@@ -79,7 +80,7 @@ public class PDFPanel{
 	
 	protected void initializeViewer(){
 		
-		
+		pdfDecoder.setDisplayView(Display.SINGLE_PAGE, Display.DISPLAY_CENTERED);
 		pdfDisplayFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		containerPane = pdfDisplayFrame.getContentPane();
 		containerPane.setLayout(new BorderLayout());
