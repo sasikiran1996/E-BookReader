@@ -1,10 +1,12 @@
 package PDFReader;
 
+import java.util.ArrayList;
+
 public class Main {
 	
 	public static void  main(String[] args){
 		System.out.println("Hello");
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	/*	javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -13,7 +15,14 @@ public class Main {
 				new PDFPanel();
 				
 			}
-		});
+		});*/
+		
+		ArrayList<String> importList = Import.importPdfFiles();
+		ternaryTree TTree = Import.makeTree(importList) ;
+		TTree.prefixedSearch("cs13b051");
+		for(int i=0;i<TTree.matchings.size();i++){
+			System.out.println(TTree.matchings.get(i));
+		}
 		
 	/*	String S1 = "book" ;
 		String S2 = "boob" ;
