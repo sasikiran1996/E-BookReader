@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ import org.jpedal.fonts.FontMappings;
 public class PDFPanel{
 	
 	private JFrame pdfDisplayFrame = new JFrame();
-	private PdfDecoder pdfDecoder ; 
+	private PdfDecoder pdfDecoder ;
 	private String currentFileName;
 	private int currentPage = 1 ;
 	public JMenu menu ;
@@ -131,6 +132,33 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+				//opening new window on separate thread
+				javax.swing.SwingUtilities.invokeLater(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						//DisplayTheme.setSystemTheme();
+						JFrame frame = new JFrame("Quick Open");
+
+				        //Create and set up the content pane.
+				        JComponent newContentPane = new QuickOpenWindow();
+				        newContentPane.setOpaque(true); //content panes must be opaque
+				        frame.setContentPane(newContentPane);
+				        
+				        frame.setLocationRelativeTo(null);
+					    final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					    frame.setSize(screen.width/4,screen.height/4);
+
+				        //Display the window.
+				        frame.pack();
+				        frame.setVisible(true);
+
+				        
+				        
+					}
+				});
+				
 			}
 		});
 		

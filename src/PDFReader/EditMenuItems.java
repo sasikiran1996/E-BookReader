@@ -101,5 +101,4 @@ public class EditMenuItems {
 		pdfDecoder.getTextLines().addHighlights(rectanglesArray, true, currentPage);
 		pdfDecoder.repaint();
 	}
-
 }
