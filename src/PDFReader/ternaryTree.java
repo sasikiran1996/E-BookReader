@@ -1,9 +1,17 @@
 package PDFReader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ternaryTree {
+public class ternaryTree implements Serializable{
 	
+	 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3596616777469286514L;
+
 	public ternaryTreeNode root = null;
 	
 	//Everytime new matchings arrayList will be assigned to it

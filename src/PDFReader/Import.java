@@ -1,12 +1,29 @@
 package PDFReader;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class Import {
 	public static ArrayList<String> importPdfFiles(){
 		ArrayList<String> importedFiles = new ArrayList<String>() ;
+		 
 		flist("../../../" , importedFiles) ;
+		try
+	      {
+	         FileOutputStream fileOut =
+	         new FileOutputStream("importArrayList.ser");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(importedFiles);
+	         out.close();
+	         fileOut.close();
+	         //System.out.printf("Serialized data is saved in /tmp/employee.ser");
+	      }catch(IOException i)
+	      {
+	          i.printStackTrace();
+	      }
 		return importedFiles ;
 	}
 	public static void flist(String dirName , ArrayList<String> importedList){
@@ -32,6 +49,19 @@ public class Import {
 		for (i=0 ; i<importedArrayList.size() ; ++i){
 			tree.AddString(getName(importedArrayList.get(i)), i);
 		}
+		try
+	      {
+	         FileOutputStream fileOut =
+	         new FileOutputStream("importTTree.ser");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(tree);
+	         out.close();
+	         fileOut.close();
+	         //System.out.printf("Serialized data is saved in /tmp/employee.ser");
+	      }catch(IOException err)
+	      {
+	          err.printStackTrace();
+	      }
 		return  tree;
 		
 	}

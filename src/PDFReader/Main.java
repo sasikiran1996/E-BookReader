@@ -1,5 +1,7 @@
 package PDFReader;
 
+import java.util.ArrayList;
+
 
 public class Main {
 	
@@ -15,16 +17,24 @@ public class Main {
 				
 			}
 		});
-		
+		ArrayList<String> sugArr = Import.importPdfFiles() ;
+		ternaryTree sugTree = Import.makeTree(sugArr);
+		ReadSer readSer = new ReadSer() ;
+		ArrayList<String> serSugArr = readSer.fileArray ;
+		ternaryTree serSugTree = readSer.fileTree ;
+		int i = 0 ;
+		for(i=0 ; i<serSugArr.size() ; ++i){
+			System.out.println(serSugArr.get(i));
+		}
 		//Note : TODO: this should be on  a separate thread
-		/*
+		
 		ArrayList<String> importList = Import.importPdfFiles();
 		ternaryTree TTree = Import.makeTree(importList) ;
 		TTree.prefixedSearch("cs13b051");
-		for(int i=0;i<TTree.matchings.size();i++){
-			System.out.println(TTree.matchings.get(i));
+		for ( i=0;i<TTree.matchings.size();i++){
+			//System.out.println(TTree.matchings.get(i));
 		}
-		*/
+		
 	/*	String S1 = "book" ;
 		String S2 = "boob" ;
 		System.out.println(LDistance.levenDistance(S1, S2, S1.length(), S2.length(), LDistance.makeArray(S1.length(), S2.length())));

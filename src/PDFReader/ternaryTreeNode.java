@@ -1,7 +1,14 @@
 package PDFReader;
 
-public class ternaryTreeNode {
+import java.io.Serializable;
+
+public class ternaryTreeNode implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2930873687484090585L;
+
 	//character present at node
 	//TODO: compressed to string
 	protected char character;
