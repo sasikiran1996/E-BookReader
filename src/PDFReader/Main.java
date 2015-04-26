@@ -8,13 +8,13 @@ public class Main {
 	
 	public static void  main(String[] args){
 		System.out.println("Hello");
-<<<<<<< HEAD
-=======
+
+
 		ArrayList<String> sugArr = Import.importPdfFiles() ;
 		BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 		ternaryTree sugTree = Import.makeTree(sugArr);
 		ReadSer readSer = new ReadSer() ;
->>>>>>> 03441c417e45a487ae43a7fb4b1b7b4efbf06a8a
+
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
@@ -32,21 +32,20 @@ public class Main {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-<<<<<<< HEAD
+
 				ArrayList<String> sugArr = Import.importPdfFiles() ;
 				System.out.println("Hello");
-=======
+
 				/*ArrayList<String> sugArr = Import.importPdfFiles() ;
->>>>>>> 03441c417e45a487ae43a7fb4b1b7b4efbf06a8a
+
 				BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 				System.out.println("Hi");
 				ternaryTree sugTree = Import.makeTree(sugArr);
-<<<<<<< HEAD
+
 				System.out.println("bye");
 				ReadSer readSer = new ReadSer() ;
-=======
 				ReadSer readSer = new ReadSer() ;*/
->>>>>>> 03441c417e45a487ae43a7fb4b1b7b4efbf06a8a
+
 				
 				
 			}
@@ -56,7 +55,7 @@ public class Main {
 		//ArrayList<String> sugArr = Import.importPdfFiles() ;
 		//BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 		//ternaryTree sugTree = Import.makeTree(sugArr);
-<<<<<<< HEAD
+
 	/*	ReadSer readSer = new ReadSer();
 =======
 		//ReadSer readSer = new ReadSer() ;
