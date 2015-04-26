@@ -9,6 +9,11 @@ public class Main {
 	
 	public static void  main(String[] args){
 		System.out.println("Hello");
+		ArrayList<String> sugArr = Import.importPdfFiles() ;
+		BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
+		ternaryTree sugTree = Import.makeTree(sugArr);
+		ReadSer readSer = new ReadSer() ;
+		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
@@ -26,10 +31,10 @@ public class Main {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				ArrayList<String> sugArr = Import.importPdfFiles() ;
+				/*ArrayList<String> sugArr = Import.importPdfFiles() ;
 				BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 				ternaryTree sugTree = Import.makeTree(sugArr);
-				ReadSer readSer = new ReadSer() ;
+				ReadSer readSer = new ReadSer() ;*/
 				
 				
 			}
@@ -39,7 +44,7 @@ public class Main {
 		//ArrayList<String> sugArr = Import.importPdfFiles() ;
 		//BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 		//ternaryTree sugTree = Import.makeTree(sugArr);
-		ReadSer readSer = new ReadSer() ;
+		//ReadSer readSer = new ReadSer() ;
 		ArrayList<String> serSugArr = readSer.fileArray ;
 		ternaryTree serSugTree = readSer.fileTree ;
 		BKTree serSugBKTree = readSer.fileBKTree ;
@@ -49,7 +54,12 @@ public class Main {
 		}
 		
 		System.out.println("****************************************");
-		serSugTree.prefixedSearch("shiv");
+		serSugTree.prefixedSearch("a");
+		for(i=0 ; i<serSugTree.matchings.size() ; ++i){
+			System.out.println(serSugTree.matchings.get(i));
+		}
+		System.out.println("----------------------------------------");
+		serSugTree.prefixedSearch("ass");
 		for(i=0 ; i<serSugTree.matchings.size() ; ++i){
 			System.out.println(serSugTree.matchings.get(i));
 		}

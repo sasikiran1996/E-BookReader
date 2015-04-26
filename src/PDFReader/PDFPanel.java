@@ -110,6 +110,19 @@ public class PDFPanel{
 		initializeViewer() ;
 	}
 	
+	public void addBookMark(int pageNum , JMenu bookMarkMenu){
+		final int page = pageNum ;
+		JMenuItem bookMarkMenuItem = bookMarkMenu.add("Page : " + new Integer(pageNum).toString());
+		bookMarkMenuItem.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+			currentPage = page ;
+			remakePage();
+			}
+		});
+	}
+		
+	
 	protected void initializeViewer(){
 		
 		pdfDecoder.setDisplayView(Display.SINGLE_PAGE, Display.DISPLAY_CENTERED);
@@ -405,8 +418,16 @@ public class PDFPanel{
 		});
 		mBar.add(goMenu) ;
 		
-		JMenu bookMarkMenu = new JMenu("Bookmarks") ;
+		final JMenu bookMarkMenu = new JMenu("Bookmarks") ;
 		mBar.add(bookMarkMenu);
+		JMenuItem bookMarkMenuAdd = bookMarkMenu.add("Add");
+		bookMarkMenuAdd.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+			
+				addBookMark(currentPage, bookMarkMenu);
+			}
+		});
 		//Adding the bookmarks into the menu automatically ..... <----- To be done here 
 		
 		JMenu helpMenu = new JMenu("Help") ;
