@@ -3,8 +3,8 @@ package PDFReader;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -19,6 +19,7 @@ import org.jpedal.PdfDecoder;
 
 public class QuickOpenWindow{
 	
+	//TODO: Update current page status on PDFPanel
 	JPanel mainPanel = new JPanel();
 	JComboBox<comboBoxNode> comboBox;
 	//should be updated on another thread
@@ -27,6 +28,7 @@ public class QuickOpenWindow{
 	comboBoxNode[] storageArray;
     PdfDecoder pdfDecoder;
     JFrame pdfDisplayFrame;
+    ArrayList<String> spellings = new ArrayList<String>();
 	
 	public QuickOpenWindow(PdfDecoder pdfDec,JFrame frame)
 	{
@@ -46,44 +48,6 @@ public class QuickOpenWindow{
         
         editor.setDocument(new comboBoxTextField(comboBox));
       
-        editor.addKeyListener(new KeyAdapter() {
-        	
-        	//Key Released required because field should first update
-        	public void keyReleased(KeyEvent e){
-        		if(comboBox.isDisplayable()){
-        			//first remove all existing entries
-        			//next add all relevant entries
-        			//String typedWord = ((JTextField)comboBox.getEditor().getEditorComponent()).getText();
-        			JTextComponent src = (JTextComponent)e.getSource();
-        			String typedWord = (String)src.getText();
-        			currentPattern = typedWord;
-        			//String typedWord = (String)comboBox.getSelectedItem();
-    				//currentPattern = typedWord;
-    				System.out.println(currentPattern);
-    				/*
-        			ReadSer.fileTree.prefixedSearch(currentPattern.toString());
-    				System.out.println(ReadSer.fileTree.matchings.size());
-        			for(int i =0;i<ReadSer.fileTree.matchings.size();i++){
-    					storage.add(new comboBoxNode(ReadSer.fileTree.matchings.get(i),ReadSer.fileTree.indices.get(i)));
-    					System.out.println(ReadSer.fileTree.matchings.get(i));
-        			}
-        			
-        			/*comboBox.setModel(new DefaultComboBoxModel(ReadSer.fileTree.matchings.toArray()) {
-        			      protected void fireContentsChanged(Object obj, int i, int j) {
-        			          System.out.println("Ha");
-        			      }
-        			    });*/
-    				/*
-        			storageArray = new comboBoxNode[storage.size()];
-        			comboBox.setModel(new DefaultComboBoxModel<comboBoxNode>(storage.toArray(storageArray)));
-        			*/comboBox.setPopupVisible(true);
-        		}
-        	}
-		});
-		
-		
-			
-        
         //TODO:Add Action Listener here
         comboBox.addActionListener(new ActionListener() {
 			
@@ -93,40 +57,83 @@ public class QuickOpenWindow{
 				/*String typedWord = comboBox.getSelectedItem().toString();
 				currentPattern = typedWord;*/
 				//on click something should happen
+				
     			int desired = comboBox.getSelectedIndex();
-				System.out.println(ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired)));
-				String currentFileName = ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired));
-				int currentPage = 1;
-				
-				try {
-					pdfDecoder.closePdfFile();
-					pdfDecoder.setExtractionMode(PdfDecoder.TEXT); //extract just text
-		            PdfDecoder.init(true);
+    			if(desired == -1){
+    				
+    				String typed = comboBox.getSelectedItem().toString();
+    				int precision = 1;
+    				if((int)(2*typed.length()/5) > precision){
+    					precision = (int)(2*typed.length()/5);
+    				}
+    				System.out.println("typed:" + typed);
+    				System.out.println("precision" + precision);
+    				
+    				spellings = ReadSer.fileBKTree.getMatches(typed, precision);
+    				System.out.println("size:" + spellings.size());
+    			}
+    			else{
+    				System.out.println(ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired)));
+    				String currentFileName = ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired));
+    				int currentPage = 1;
+    				
+    				try {
+    					pdfDecoder.closePdfFile();
+    					pdfDecoder.setExtractionMode(PdfDecoder.TEXT); //extract just text
+    		            PdfDecoder.init(true);
+    					
+    					pdfDecoder.openPdfFile(currentFileName);
+    					pdfDecoder.decodePage(currentPage);
+
+    					pdfDecoder.waitForDecodingToFinish();
+    					pdfDecoder.setPageParameters(1,1); 
+    					pdfDecoder.invalidate();
+
+    				} catch (Exception e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+    				
+    				pdfDisplayFrame.setTitle(currentFileName);
+    		        
+    				pdfDisplayFrame.repaint();
+    				
+    				
+    				
+    				comboBox.removeAllItems();
+    				comboBox.setPopupVisible(false);
+    				//Now disposing of main panel
+
+    			}
+								
+			}
+		});
+        
+        editor.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
 					
-					pdfDecoder.openPdfFile(currentFileName);
-					pdfDecoder.decodePage(currentPage);
-
-					pdfDecoder.waitForDecodingToFinish();
-					pdfDecoder.setPageParameters(1,1); 
-					pdfDecoder.invalidate();
-
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Calling BKTree for suggestions");
 				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
 				
-				pdfDisplayFrame.setTitle(currentFileName);
-		        
-				pdfDisplayFrame.repaint();
-				
-				
-				
-				comboBox.removeAllItems();
-				comboBox.setPopupVisible(false);
-				//Now disposing of main panel
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
 				
 			}
 		});
+        
+        
         
         //Lay out everything.	
         JPanel patternPanel = new JPanel();

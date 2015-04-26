@@ -41,6 +41,8 @@ public class comboBoxTextField extends PlainDocument{
 		storageArray = new comboBoxNode[storage.size()];
 		comboBox.setModel(new DefaultComboBoxModel<comboBoxNode>(storage.toArray(storageArray)));
 		selected = false;
+		
+		comboBox.setPopupVisible(true);
 
 	}
 	
@@ -75,6 +77,7 @@ public class comboBoxTextField extends PlainDocument{
 		storageArray = new comboBoxNode[storage.size()];
 		comboBox.setModel(new DefaultComboBoxModel<comboBoxNode>(storage.toArray(storageArray)));
 		selected = false;
-		
+
+		comboBox.setPopupVisible(true);
 	}
 }

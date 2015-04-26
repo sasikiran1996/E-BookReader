@@ -101,8 +101,13 @@ public class ternaryTree implements Serializable{
 		
 		
 		//Note that query should be non null or empty
+		if(query.length() <= 3){
+			findNode(root,query,0);
+		}
 		//findNode(root,query,0);
-		searchWithinHammingDistance(root, query, 0, 1, "");
+		else{
+			searchWithinHammingDistance(root, query, 0, 1, "");
+		}
 		for(int i =0;i< ReqNodes.size();i++){
 			ternaryTreeNode req = ReqNodes.get(i);
 			if(req.endNode){
