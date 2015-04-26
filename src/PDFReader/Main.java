@@ -7,13 +7,21 @@ import java.util.ArrayList;
 public class Main {
 	
 	public static void  main(String[] args){
-		System.out.println("Hello");
+		System.out.println("cfgchgjhk");
+
 
 
 		ArrayList<String> sugArr = Import.importPdfFiles() ;
 		BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 		ternaryTree sugTree = Import.makeTree(sugArr);
 		ReadSer readSer = new ReadSer() ;
+		int i = 0 ;
+		for (i=0 ; i<readSer.fileArray.size();++i){
+			System.out.println(readSer.fileArray.get(i));
+		}
+
+
+//		ReadSer readSer = new ReadSer() ;
 
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -33,11 +41,19 @@ public class Main {
 			public void run() {
 				// TODO Auto-generated method stub
 
-				ArrayList<String> sugArr = Import.importPdfFiles() ;
-				System.out.println("Hello");
+
+				//ArrayList<String> sugArr = Import.importPdfFiles() ;
+				//System.out.println("Hello");
+
+				//ArrayList<String> sugArr = Import.importPdfFiles() ;
+
+				//BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
+				//System.out.println("Hi");
+				//ternaryTree sugTree = Import.makeTree(sugArr);
+
+
 
 				/*ArrayList<String> sugArr = Import.importPdfFiles() ;
-
 				BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 				System.out.println("Hi");
 				ternaryTree sugTree = Import.makeTree(sugArr);
@@ -46,11 +62,13 @@ public class Main {
 				ReadSer readSer = new ReadSer() ;
 				ReadSer readSer = new ReadSer() ;*/
 
-				
-				
 			}
 		});
-		
+		System.out.println("000000000000000000000000000000000000000");
+		ArrayList<String > listArr = ReadSer.fileBKTree.getMatches("the-alchemist-aa", 6);
+		for(i=0 ; i<listArr.size() ; ++i){
+			System.out.println(listArr.get(i));
+		}
 		
 		//ArrayList<String> sugArr = Import.importPdfFiles() ;
 		//BKTree sugBKTree = Import.importFileBKTree(sugArr) ;

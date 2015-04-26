@@ -9,27 +9,29 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 
-public class QuickOpenWindow extends JPanel{
+import org.jpedal.PdfDecoder;
+
+public class QuickOpenWindow{
 	
-	private static final long serialVersionUID = -6319430115413306158L;
+	JPanel mainPanel = new JPanel();
 	JComboBox<comboBoxNode> comboBox;
 	//should be updated on another thread
-	ArrayList<String> autoCompletePatterns = new ArrayList<String>();
-	ArrayList<Integer> indices = new ArrayList<Integer>();
 	String currentPattern;
 	ArrayList<comboBoxNode> storage = new ArrayList<comboBoxNode>();
 	comboBoxNode[] storageArray;
-    
+    PdfDecoder pdfDecoder;
+    JFrame pdfDisplayFrame;
 	
-	public QuickOpenWindow()
+	public QuickOpenWindow(PdfDecoder pdfDec,JFrame frame)
 	{
-		
+		this.pdfDecoder = pdfDec;
+		pdfDisplayFrame = frame;
 		JLabel patternLabel1 = new JLabel("Enter the File Name or");
         JLabel patternLabel2 = new JLabel("Dynamically select the file ot be opened");
         
@@ -91,11 +93,38 @@ public class QuickOpenWindow extends JPanel{
 				/*String typedWord = comboBox.getSelectedItem().toString();
 				currentPattern = typedWord;*/
 				//on click something should happen
-    			comboBoxNode desired = (comboBoxNode)comboBox.getSelectedItem();
-    			
+    			int desired = comboBox.getSelectedIndex();
+				System.out.println(ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired)));
+				String currentFileName = ReadSer.fileArray.get(ReadSer.fileTree.indices.get(desired));
+				int currentPage = 1;
+				
+				try {
+					pdfDecoder.closePdfFile();
+					pdfDecoder.setExtractionMode(PdfDecoder.TEXT); //extract just text
+		            PdfDecoder.init(true);
+					
+					pdfDecoder.openPdfFile(currentFileName);
+					pdfDecoder.decodePage(currentPage);
+
+					pdfDecoder.waitForDecodingToFinish();
+					pdfDecoder.setPageParameters(1,1); 
+					pdfDecoder.invalidate();
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				pdfDisplayFrame.setTitle(currentFileName);
+		        
+				pdfDisplayFrame.repaint();
+				
+				
 				
 				comboBox.removeAllItems();
 				comboBox.setPopupVisible(false);
+				//Now disposing of main panel
+				
 			}
 		});
         
@@ -109,10 +138,10 @@ public class QuickOpenWindow extends JPanel{
         patternPanel.add(comboBox);
         
         patternPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        add(patternPanel);
+        mainPanel.add(patternPanel);
         
         
-        setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         
 	}
 }

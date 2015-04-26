@@ -52,6 +52,7 @@ public class PDFPanel{
 	private JTextField searchArea = new JTextField("Search");
 	Container containerPane ;
 	int fullScreenFlag = 0 ;
+	ArrayList<Integer> bookMarkArray = new ArrayList<Integer>();
 	public PDFPanel(String name){
 		
 		pdfDecoder = new PdfDecoder(true) ;
@@ -111,6 +112,13 @@ public class PDFPanel{
 	}
 	
 	public void addBookMark(int pageNum , JMenu bookMarkMenu){
+		int i = 0 ;
+		for(i=0; i<bookMarkArray.size() ; ++i){
+			if (bookMarkArray.get(i) == pageNum){
+				return ;
+			}
+		}
+		bookMarkArray.add(pageNum);
 		final int page = pageNum ;
 		JMenuItem bookMarkMenuItem = bookMarkMenu.add("Page : " + new Integer(pageNum).toString());
 		bookMarkMenuItem.addActionListener(new ActionListener() {
@@ -186,7 +194,8 @@ public class PDFPanel{
 						JFrame frame = new JFrame("Quick Open");
 
 				        //Create and set up the content pane.
-				        JComponent newContentPane = new QuickOpenWindow();
+						QuickOpenWindow qOW = new QuickOpenWindow(pdfDecoder,pdfDisplayFrame);
+				        JComponent newContentPane = qOW.mainPanel;
 				        newContentPane.setOpaque(true); //content panes must be opaque
 				        frame.setContentPane(newContentPane);
 				        
@@ -538,7 +547,7 @@ public class PDFPanel{
 	    JScrollPane currentScroll = new JScrollPane();
 	    currentScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	    currentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	    
+	    currentScroll.getVerticalScrollBar().setUnitIncrement(20);
 	    currentScroll.setViewportView(pdfDecoder);
 	        
 	    return currentScroll;
