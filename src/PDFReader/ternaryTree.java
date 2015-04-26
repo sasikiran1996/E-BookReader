@@ -84,6 +84,7 @@ public class ternaryTree implements Serializable{
 	//gives the strings with given prefix
 	public void prefixedSearch(String query){
 		
+		Generated = new ArrayList<String>();
 		matchings = new ArrayList<String>();
 		ReqNodes = new ArrayList<ternaryTreeNode>();
 		indices = new ArrayList<Integer>();

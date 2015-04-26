@@ -2,13 +2,13 @@ package PDFReader;
 
 import java.util.ArrayList;
 
-import org.jpedal.examples.viewer.commands.FullScreen;
 
 
 public class Main {
 	
 	public static void  main(String[] args){
 		System.out.println("Hello");
+		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
@@ -16,7 +16,6 @@ public class Main {
 				// TODO Auto-generated method stub
 				DisplayTheme.setSystemTheme();
 				new PDFPanel();
-				
 				
 			}
 		});
@@ -27,8 +26,11 @@ public class Main {
 			public void run() {
 				// TODO Auto-generated method stub
 				ArrayList<String> sugArr = Import.importPdfFiles() ;
+				System.out.println("Hello");
 				BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
+				System.out.println("Hi");
 				ternaryTree sugTree = Import.makeTree(sugArr);
+				System.out.println("bye");
 				ReadSer readSer = new ReadSer() ;
 				
 				
@@ -39,7 +41,7 @@ public class Main {
 		//ArrayList<String> sugArr = Import.importPdfFiles() ;
 		//BKTree sugBKTree = Import.importFileBKTree(sugArr) ;
 		//ternaryTree sugTree = Import.makeTree(sugArr);
-		ReadSer readSer = new ReadSer() ;
+	/*	ReadSer readSer = new ReadSer();
 		ArrayList<String> serSugArr = readSer.fileArray ;
 		ternaryTree serSugTree = readSer.fileTree ;
 		BKTree serSugBKTree = readSer.fileBKTree ;
@@ -53,6 +55,7 @@ public class Main {
 		for(i=0 ; i<serSugTree.matchings.size() ; ++i){
 			System.out.println(serSugTree.matchings.get(i));
 		}
+		
 		
 		System.out.println("========================================");
 		ArrayList<String> suggList = serSugBKTree.getMatches("report" , 3);
