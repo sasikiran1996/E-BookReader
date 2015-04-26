@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -48,6 +51,7 @@ public class PDFPanel{
 	private int currentScalingIndex = 2; 
 	private JTextField searchArea = new JTextField("Search");
 	Container containerPane ;
+	int fullScreenFlag = 0 ;
 	public PDFPanel(String name){
 		
 		pdfDecoder = new PdfDecoder(true) ;
@@ -72,6 +76,33 @@ public class PDFPanel{
 	    //set page number display
 	    
 	}
+	
+	 public void fullScreen() {
+		 fullScreenFlag = 1 ;
+			//pdfDisplayFrame.setVisible(false);
+	 	pdfDisplayFrame.dispose();
+	 //	pdfDisplayFrame.setUndecorated(true);
+	 	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    GraphicsDevice[] gs = ge.getScreenDevices();
+	    GraphicsDevice gdev = gs[0];
+	    gdev.setFullScreenWindow(pdfDisplayFrame);
+	    
+	  }
+	 
+	 public void removeFullScreen(){
+		 fullScreenFlag = 0 ;
+		 pdfDisplayFrame.dispose();
+		// pdfDisplayFrame.setUndecorated(true);
+		 GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		 GraphicsDevice[] gs = ge.getScreenDevices();
+		 GraphicsDevice gdev = gs[0];
+		 gdev.setFullScreenWindow(null);
+		 pdfDisplayFrame.setVisible(true);
+		 
+		 //pdfDisplayFrame.pack();
+		// pdfDisplayFrame.setUndecorated(false);
+
+	 }
 	
 	public PDFPanel(){
 		pdfDisplayFrame.setTitle("Empty File");
@@ -169,6 +200,10 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here
+				ArrayList<String > list = Import.importPdfFiles() ;
+				Import.makeTree(list) ;
+				Import.importFileBKTree(list);
+				new ReadSer() ;
 				
 				
 			}
@@ -242,6 +277,12 @@ public class PDFPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 			//Open here 
+			if (fullScreenFlag == 0 )
+				fullScreen();
+			else if (fullScreenFlag == 1){
+				removeFullScreen();
+			}
+				
 			}
 		});
 		
@@ -313,6 +354,8 @@ public class PDFPanel{
 		JMenu goMenu = new JMenu("Goto") ;
 		
 		JMenuItem goItemNextPage = goMenu.add("Next Page");
+		goItemNextPage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,ActionEvent.CTRL_MASK));
+		
 		
 		goItemNextPage.addActionListener(new ActionListener() {
 			
@@ -328,6 +371,8 @@ public class PDFPanel{
 		
 		
 		JMenuItem goItemPrevPage = goMenu.add("Previous Page");
+		goItemPrevPage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP,ActionEvent.CTRL_MASK));
+		
 		goItemPrevPage.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {

@@ -10,21 +10,43 @@ public class Import {
 	public static ArrayList<String> importPdfFiles(){
 		ArrayList<String> importedFiles = new ArrayList<String>() ;
 		 
-		flist("../../../" , importedFiles) ;
+		flist("../../../../" , importedFiles) ;		
 		try
 	      {
-	         FileOutputStream fileOut =
-	         new FileOutputStream("importArrayList.ser");
+	         FileOutputStream fileOut = new FileOutputStream("importArrayList.ser");
 	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	         out.writeObject(importedFiles);
 	         out.close();
 	         fileOut.close();
 	         //System.out.printf("Serialized data is saved in /tmp/employee.ser");
-	      }catch(IOException i)
+	      }
+		catch(IOException err)
 	      {
-	          i.printStackTrace();
+	          err.printStackTrace();
 	      }
 		return importedFiles ;
+	}
+	
+	public static BKTree importFileBKTree(ArrayList<String> importedFiles){
+		int i = 0 ;
+		BKTree importedBKTree = new BKTree() ;
+		for (i=0 ; i<importedFiles.size() ; ++i ){
+			importedBKTree.addBKNode(getName(importedFiles.get(i)));
+		}
+		try
+	      {
+	         FileOutputStream fileOut = new FileOutputStream("importBKTree.ser");
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(importedBKTree);
+	         out.close();
+	         fileOut.close();
+	         //System.out.printf("Serialized data is saved in /tmp/employee.ser");
+	      }
+		catch(IOException err)
+	      {
+	          err.printStackTrace();
+	      }
+		return importedBKTree ;
 	}
 	public static void flist(String dirName , ArrayList<String> importedList){
 		File directory = new File(dirName);

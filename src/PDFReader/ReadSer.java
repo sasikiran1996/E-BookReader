@@ -8,7 +8,9 @@ import java.util.ArrayList;
 public class ReadSer {
 	public static ternaryTree fileTree ;
 	public static ArrayList<String>  fileArray ;
+	public static BKTree fileBKTree ;
 	public ReadSer(){
+		fileBKTree = new BKTree();
 		   try
 		      {
 		         FileInputStream fileIn = new FileInputStream("importTTree.ser");
@@ -36,9 +38,35 @@ public class ReadSer {
 		   
 		   try
 		      {
+		         FileInputStream fileIn = new FileInputStream("importBKTree.ser");
+		         
+		         ObjectInputStream in = new ObjectInputStream(fileIn);
+		         fileBKTree = (BKTree) in.readObject();
+		         
+		         in.close();
+		         fileIn.close();
+		      }
+		   
+		   catch(IOException i)
+		      {
+		         i.printStackTrace();
+		         
+		      }
+		   
+		   catch(ClassNotFoundException c)
+		      {
+		         System.out.println("fileTree Serialised Object not found");
+		         c.printStackTrace();
+		         fileTree = null ;
+		         
+		      }
+		   
+		   try
+		      {
 		         FileInputStream fileIn = new FileInputStream("importArrayList.ser");
 		         ObjectInputStream in = new ObjectInputStream(fileIn);
 		         fileArray = (ArrayList<String>) in.readObject();
+		        
 		         in.close();
 		         fileIn.close();
 		      }
@@ -56,5 +84,6 @@ public class ReadSer {
 		         fileArray = null ;
 		         
 		      }
+		  
 	}
 }

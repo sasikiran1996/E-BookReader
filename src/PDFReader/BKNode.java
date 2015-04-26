@@ -1,8 +1,13 @@
 package PDFReader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BKNode {
+public class BKNode implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1260626751324816325L;
 	String word ;
 	ArrayList<BKNode> childList ;
 	int keyValue ;

@@ -14,7 +14,7 @@ public class ternaryTree implements Serializable{
 
 	public ternaryTreeNode root = null;
 	
-	//Everytime new matchings arrayList will be assigned to it
+	// Every time new matchings arrayList will be assigned to it
 	// $ is the terminating character
 	protected ArrayList<Integer> indices = new ArrayList<Integer>();
 	
