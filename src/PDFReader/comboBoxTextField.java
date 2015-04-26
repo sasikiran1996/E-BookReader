@@ -26,9 +26,22 @@ public class comboBoxTextField extends PlainDocument{
 		if(selected) return;
         super.remove(offs, len);
         String content = getText(0, getLength());
-        
         System.out.println(content);
         
+        storage = new ArrayList<comboBoxNode>();
+        
+        ReadSer.fileTree.prefixedSearch(content);
+        System.out.println(ReadSer.fileTree.matchings.size());
+		for(int i =0;i<ReadSer.fileTree.matchings.size();i++){
+			storage.add(new comboBoxNode(ReadSer.fileTree.matchings.get(i),ReadSer.fileTree.indices.get(i)));
+			System.out.println(ReadSer.fileTree.matchings.get(i));
+		}
+		
+		selected = true;
+		storageArray = new comboBoxNode[storage.size()];
+		comboBox.setModel(new DefaultComboBoxModel<comboBoxNode>(storage.toArray(storageArray)));
+		selected = false;
+
 	}
 	
 	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {

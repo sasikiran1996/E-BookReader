@@ -186,7 +186,8 @@ public class PDFPanel{
 						JFrame frame = new JFrame("Quick Open");
 
 				        //Create and set up the content pane.
-				        JComponent newContentPane = new QuickOpenWindow();
+						QuickOpenWindow qOW = new QuickOpenWindow(pdfDecoder,pdfDisplayFrame);
+				        JComponent newContentPane = qOW.mainPanel;
 				        newContentPane.setOpaque(true); //content panes must be opaque
 				        frame.setContentPane(newContentPane);
 				        
